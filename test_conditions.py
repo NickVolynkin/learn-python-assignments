@@ -3,7 +3,7 @@
 
 from nose.tools import raises
 
-from conditions import conditions
+from week2 import conditions
 
 
 @raises(ValueError)
