@@ -3,7 +3,7 @@
 
 
 def get_occupation_by_age(age):
-    # will raise ValueErrors if not a number
+    # will raise TypeError or ValueError if not a number
     age = int(age)
 
     if age < 0:
@@ -18,3 +18,17 @@ def get_occupation_by_age(age):
         return "work"
     else:
         return "retirement"
+
+
+def compare_strings(first, second):
+    if not type(first) == type(second) == str:
+        return 0
+    elif first == second:
+        return 1
+    elif len(first) > len(second):
+        return 2
+    elif second == 'learn':
+        return 3
+    else:
+        return None
+
