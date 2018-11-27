@@ -73,19 +73,8 @@ def list_class_labels(students):
     :return:
     """
 
-    def sorter(label):
-        """
-        add leading zero to 1-digit class labels
-        :param label:
-        :return:
-        """
-        if len(label) == 2:
-            return '0' + label
-        else:
-            return label
-
     classes_set = set([student['school_class'] for student in students])
-    classes_list = sorted(list(classes_set), key=sorter)
+    classes_list = sorted(list(classes_set), key='{:0>3}'.format)
     return classes_list
 
 
@@ -93,11 +82,11 @@ def main():
     students = list(generate_random_grades(1000))
     print('{} students'.format(len(students)))
     avg_school = get_avg_school_grade(students)
-    print('average school mark: {}'.format(avg_school))
+    print('average school mark: {:.3f}'.format(avg_school))
     print('average class marks:')
 
-    for class_ in list_class_labels(students):
-        print('\t{}: {}'.format(class_, get_avg_class_grade(students, class_)))
+    for class_label in list_class_labels(students):
+        print('\t{}: {:.3f}'.format(class_label, get_avg_class_grade(students, class_label)))
 
 
 if __name__ == '__main__':
