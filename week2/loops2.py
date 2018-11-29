@@ -1,28 +1,42 @@
 import datetime
+import logging
+
+logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO,
+                    filename='ask_user.log')
 
 
 def ask_user():
     while True:
         try:
-            user_input = input("\nКак дела?\n").lower()
-            answer = get_answer(user_input)
+            user_input = input("\nКак дела?\n")
+            logging.info('input: "{}"'.format(user_input))
+            answer = get_answer(user_input.lower())
         except (KeyboardInterrupt, EOFError) as exc:
             # Ctrl+C is KeyboardInterrupt,
             # Ctrl+D is EOFError
+            logging.info(str(type(exc)))
             answer = get_answer(type(exc))
+        except Exception as exc:
+            logging.error(exc)
+            answer = get_answer(Exception)
 
         if type(answer) is list:
             for a in answer:
-                process_answer(a)
+                run_answer(a)
         else:
-            process_answer(answer)
+            run_answer(answer)
 
 
-def process_answer(answer):
+def run_answer(answer):
     if callable(answer):
-        print(answer())
+        logging.info('calling: {}'.format(str(answer)))
+        output = answer()
     else:
-        print(answer)
+        output = answer
+
+    logging.info('output: "{}"'.format(output))
+    print(output)
 
 
 def get_answer(user_input):
@@ -30,16 +44,13 @@ def get_answer(user_input):
         "время": time,
         "дата": date,
         "learn": "python",
-        "хорошо": ['Пока!', quit_program],
-        KeyboardInterrupt: ['Пока!', quit_program],
-        EOFError: ['Пока!', quit_program],
-        None: '¯\_(ツ)_/¯'
+        "хорошо": ['Пока!', lambda: exit(0)],
+        KeyboardInterrupt: ['Пока!', lambda: exit(1)],
+        EOFError: ['Пока!', lambda: exit(1)],
+        Exception: ['Что-то пошло не так.', lambda: exit(2)]
     }
 
-    if user_input in known_questions:
-        answer = known_questions[user_input]
-    else:
-        answer = known_questions[None]
+    answer = known_questions.get(user_input, '¯\_(ツ)_/¯')
 
     return answer
 
@@ -50,10 +61,6 @@ def time():
 
 def date():
     return datetime.datetime.now().date()
-
-
-def quit_program():
-    exit(0)
 
 
 if __name__ == '__main__':
