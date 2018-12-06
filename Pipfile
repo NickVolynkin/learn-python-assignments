@@ -7,6 +7,8 @@ verify_ssl = true
 
 [packages]
 nose = "*"
+wemake-python-styleguide = "*"
+flake8-per-file-ignores = "*"
 
 [requires]
 python_version = "3.6"
